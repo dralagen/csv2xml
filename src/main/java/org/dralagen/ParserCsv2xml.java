@@ -12,6 +12,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -55,47 +56,56 @@ public class ParserCsv2xml {
             BufferedReader csvReader;
             csvReader = new BufferedReader(new FileReader(csvFileName));
 
-            int line = 0;
-            List<String> headers = new ArrayList<String>(5);
-
+            List<String> headers = new ArrayList<String>();
             String text = null;
-            while ((text = csvReader.readLine()) != null) {
+
+            // Header row
+            if( (text = csvReader.readLine()) != null) {
                 String[] rowValues = text.split(delimiter);
+                for (String col : rowValues) {
+                    headers.add(col);
+                }
+            }
 
-                if (line == 0) { // Header row
+            // Data rows
+            while ((text = csvReader.readLine()) != null) {
 
-                    for (String col : rowValues) {
-                        headers.add(col);
-                    }
+                List<String> rowValues = new ArrayList<String>(Arrays.asList(text.split(delimiter, headers.size())));
 
-                } else { // Data row
 
-                    rowsCount++;
+                // complete ligne who field contain '\n'
+                while (rowValues.size() < headers.size()) {
+                    if ((text = csvReader.readLine()) != null ) {
+                        String[] extendsRowValues = text.split(delimiter);
 
-                    Element rowElement = newDoc.createElement("element");
-                    rootElement.appendChild(rowElement);
-                    for (int col = 0; col < headers.size(); col++) {
+                        int rowValuesLastIndex = rowValues.size() - 1;
 
-                        String header = headers.get(col);
-                        String value = null;
+                        rowValues.set(rowValuesLastIndex, rowValues.get(rowValuesLastIndex) + "\n" + extendsRowValues[0]);
 
-                        if (col < rowValues.length) {
-
-                            value = rowValues[col];
-
-                        } else {
-                            // ?? Default value
-                            value = "";
+                        if (extendsRowValues.length > 1) {
+                            for ( int i = 1; i < extendsRowValues.length; i++ ) {
+                                rowValues.add(extendsRowValues[i]);
+                            }
                         }
-
-                        Element curElement = newDoc.createElement(header);
-                        curElement.appendChild(newDoc.createTextNode(value));
-                        rowElement.appendChild(curElement);
-
                     }
+                }
+
+                rowsCount++;
+
+                Element rowElement = newDoc.createElement("element");
+                rootElement.appendChild(rowElement);
+                for (int col = 0; col < headers.size(); col++) {
+
+                    String header = headers.get(col);
+                    String value = null;
+
+                    value = rowValues.get(col);
+
+                    Element curElement = newDoc.createElement(header);
+                    curElement.appendChild(newDoc.createTextNode(value));
+                    rowElement.appendChild(curElement);
 
                 }
-                line++;
 
             }
 
