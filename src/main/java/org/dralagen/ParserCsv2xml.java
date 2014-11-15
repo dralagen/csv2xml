@@ -121,7 +121,8 @@ public class ParserCsv2xml {
                 String output = new String(baos.toByteArray());
                 OutputStream out = new FileOutputStream(xmlFileName);
                 out.write(output.getBytes());
-                System.out.println(output);
+                System.out.println("File " + csvFileName + " is successful parsed in " + xmlFileName);
+                //System.out.println(output);
 
 
             } catch (Exception exp) {
