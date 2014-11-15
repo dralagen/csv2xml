@@ -1,3 +1,5 @@
+package org.dralagen;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -116,9 +118,11 @@ public class ParserCsv2xml {
                 aTransformer.transform(src, result);
 
                 osw.flush();
-                OutputStream out = new BufferedOutputStream(new FileOutputStream(xmlFileName));
-                baos.writeTo(out);
-                System.out.println(new String(baos.toByteArray()));
+                String output = new String(baos.toByteArray());
+                OutputStream out = new FileOutputStream(xmlFileName);
+                out.write(output.getBytes());
+                System.out.println(output);
+
 
             } catch (Exception exp) {
                 exp.printStackTrace();
@@ -143,8 +147,13 @@ public class ParserCsv2xml {
     }
 
     public static void main (String[] args) {
-        ParserCsv2xml parser = new ParserCsv2xml();
-        parser.convertFile("./agenda_culturel.csv", "./agenda_culturel.xml", ";");
+        if (args.length != 3) {
+            System.out.println("Usage : csv2xml \"path/of/input/file.csv\" \"path/of/output/file.xml\" \";\"");
+            System.exit(1);
+        }
+
+        ParserCsv2xml parser = new org.dralagen.ParserCsv2xml();
+        parser.convertFile(args[0], args[1], args[2]);
     }
 }
 
