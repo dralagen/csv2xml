@@ -6,7 +6,7 @@
 
     <groupId>org.dralagen</groupId>
     <artifactId>csv2xml</artifactId>
-    <version>0.1-beta-2</version>
+    <version>0.1-beta-1</version>
     <packaging>jar</packaging>
 
     <name>csv2xml</name>
@@ -49,6 +49,14 @@
         </repository>
     </distributionManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.dralagen</groupId>
+            <artifactId>csv2xml</artifactId>
+            <version>0.1-beta-1</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -57,7 +65,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.dralagen.ParserCsv2xml</mainClass>
+                            <mainClass>org.dralagen.Csv2xml</mainClass>
                             <addClasspath>true</addClasspath>
                         </manifest>
                     </archive>
@@ -94,7 +102,6 @@
                 <version>0.10</version>
                 <configuration>
                     <message>Maven artifacts for ${project.version}</message>
-                    <noJekyll>true</noJekyll>
                     <merge>true</merge>
                     <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
                     <branch>refs/heads/master</branch>

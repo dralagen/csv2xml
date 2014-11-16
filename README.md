@@ -5,6 +5,29 @@ It's java converter to parse en csv file to xml file
 
 This parser is compatible with [openDataWrapper the lodpaddle wrapper](https://github.com/masterALMA2016/openDataWrapper)
 
+Maven dependency
+----------------
+
+Add a repository
+
+```
+<repository>
+    <id>dralagen-maven-repo</id>
+    <url>https://raw.github.com/dralagen/maven-repo/master/</url>
+</repository>
+```
+
+Use dependency
+
+```
+<dependency>
+    <groupId>org.dralagen</groupId>
+    <artifactId>csv2xml</artifactId>
+    <version>0.1-beta-1</version>
+</dependency>
+```
+
+
 
 Example of parser:
 ------------------
@@ -39,18 +62,5 @@ Output file
 </element>
 </data>
 </document>
-```
-
-Usage:
-------
-
-For compile:
-```
-mvn install
-```
-
-launch with jar in target
-```
-java -jar target/csv2xml-1.0-SNAPSHOT.jar "./test.csv" "./test.xml" ";"
 ```
 
