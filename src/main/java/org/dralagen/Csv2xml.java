@@ -33,10 +33,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created on 14/11/14.
@@ -126,58 +123,50 @@ public class Csv2xml {
      */
     public int convert(InputStream csv, String delimiter, String nodeRow) {
 
-        int rowsCount = -1;
+        int rowsCount = 0;
         try {
             // Read csv file
             BufferedReader csvReader;
             csvReader = new BufferedReader(new InputStreamReader(csv));
 
             List<String> headers = new ArrayList<String>();
-            String text = null;
 
-            // Header row
-            if( (text = csvReader.readLine()) != null) {
-                String[] rowValues = text.split(delimiter);
-                Collections.addAll(headers, rowValues);
+            { // Header row
+                String text = null;
+
+                // Header row
+                if ( (text = csvReader.readLine()) != null ) {
+                    String[] rowValues = text.split(delimiter);
+                    Collections.addAll(headers, rowValues);
+                }
+
             }
 
-            // Data rows
-            while ((text = csvReader.readLine()) != null) {
 
-                List<String> rowValues = new ArrayList<String>(Arrays.asList(text.split(delimiter, headers.size())));
+            {  // Data rows
+                List<String> rowValues = null;
+                while ( (rowValues = split(csvReader, delimiter, headers.size())) != null ) {
 
+                    Element rowElement = document.createElement(nodeRow);
+                    currentElement.appendChild(rowElement);
 
-                // complete ligne who field contain '\n'
-                while (rowValues.size() < headers.size()) {
-                    if ((text = csvReader.readLine()) != null ) {
-                        String[] extendsRowValues = text.split(delimiter);
+                    for ( int col = 0; col < headers.size(); col++ ) {
 
-                        int rowValuesLastIndex = rowValues.size() - 1;
+                        String header = headers.get(col);
+                        String value = "";
 
-                        rowValues.set(rowValuesLastIndex, rowValues.get(rowValuesLastIndex) + "\n" + extendsRowValues[0]);
-
-                        if (extendsRowValues.length > 1) {
-                            rowValues.addAll(Arrays.asList(extendsRowValues).subList(1, extendsRowValues.length));
+                        if ( col < rowValues.size() ) {
+                            value = rowValues.get(col);
                         }
+
+                        Element curElement = document.createElement(header);
+                        curElement.appendChild(document.createTextNode(value));
+                        rowElement.appendChild(curElement);
+
                     }
+
+                    rowsCount++;
                 }
-
-                rowsCount++;
-
-                Element rowElement = document.createElement(nodeRow);
-                currentElement.appendChild(rowElement);
-
-                for (int col = 0; col < headers.size(); col++) {
-
-                    String header = headers.get(col);
-                    String value = rowValues.get(col);
-
-                    Element curElement = document.createElement(header);
-                    curElement.appendChild(document.createTextNode(value));
-                    rowElement.appendChild(curElement);
-
-                }
-
             }
 
         } catch (IOException e) {
@@ -242,6 +231,71 @@ public class Csv2xml {
         }
     }
 
+    /*
+
+
+     */
+
+    private List<String> split(BufferedReader reader, String delimiter, int limit) throws IOException {
+
+        String text = reader.readLine();
+
+        if (text == null) {
+            return null;
+        }
+
+
+        String[] splited =  text.split(delimiter, limit);
+
+        List<String> result = new ArrayList<String>();
+
+        int i = 0;
+        while (i < splited.length) {
+            int j = i;
+
+            if (!splited[i].equals("") && splited[i].charAt(0) == '"' && splited[i].charAt(splited[i].length()-1) != '"') {
+                splited[i] = splited[i].substring(1);
+
+                ++j;
+                if (j < splited.length) {
+                    while ( splited[j].charAt(splited[j].length() - 1) != '"' && j < splited.length ) {
+                        splited[i] += ";" + splited[j];
+                        ++j;
+                    }
+                    splited[i] += ";" + splited[j].substring(0, splited[j].length() - 1);
+                }
+
+            }
+
+            if (!splited[i].equals("") && splited[i].charAt(0) == '"' && splited[i].charAt(splited[i].length()-1) == '"') {
+                result.add(splited[i].substring(1, splited[i].length() - 2));
+            }
+            else {
+                result.add(splited[i]);
+            }
+            i = j+1;
+        }
+
+
+        // complete line who field contain '\n'
+        if ( result.size() < limit ) {
+            List<String> extendsRowValues = null;
+            if ((extendsRowValues = split(reader, delimiter, limit - result.size())) != null) {
+
+                int rowValuesLastIndex = result.size() - 1;
+
+                result.set(rowValuesLastIndex, result.get(rowValuesLastIndex) + "\n" + extendsRowValues.get(0));
+
+                if ( extendsRowValues.size() > 1 ) {
+                    result.addAll(extendsRowValues.subList(1, extendsRowValues.size()));
+                }
+            }
+        }
+
+        return result;
+    }
+
+
     /**
      * Create an InputStream form an url or a path of fileSystem
      *
@@ -289,7 +343,7 @@ public class Csv2xml {
 
         converter.convert(csvInput, args[2], "element");
 
-        converter.writeTo(System.out);
+        //converter.writeTo(System.out);
 
         OutputStream xmlOutput;
         try {
