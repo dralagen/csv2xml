@@ -7,6 +7,34 @@
     <groupId>org.dralagen</groupId>
     <artifactId>csv2xml</artifactId>
     <version>0.1-beta-1</version>
+    <packaging>jar</packaging>
+
+    <name>csv2xml</name>
+    <description>A parser csv file to xml file</description>
+
+    <licenses>
+        <license>
+            <name>GNU Affero General Public License version 3</name>
+            <url>http://www.gnu.org/licenses/agpl.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>dralagen</id>
+            <name>Dralagen</name>
+            <email>dralagen@dralagen.fr</email>
+            <url>http://dralagen.fr</url>
+            <timezone>Europe/Paris</timezone>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/dralagen/csv2xml.git</connection>
+        <developerConnection>scm:git:https://github.com/dralagen/csv2xml.git</developerConnection>
+        <url>https://github.com/dralagen/csv2xml</url>
+    </scm>
 
     <build>
         <plugins>
