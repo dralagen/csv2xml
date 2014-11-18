@@ -278,11 +278,10 @@ public class Csv2xml {
 
                 ++j;
                 if (j < splited.length) {
-                    String concatField = splited[j];
                     while ( j < splited.length
-                            && (!concatField.equals("") || concatField.charAt(concatField.length() - 1) != '"')
+                            && (splited[j].equals("") || splited[j].charAt(splited[j].length() - 1) != '"')
                             ) {
-                        field += ";" + concatField;
+                        field += ";" + splited[j];
                         ++j;
                     }
                 }
