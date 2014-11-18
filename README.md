@@ -23,7 +23,7 @@ Use dependency
 <dependency>
     <groupId>org.dralagen</groupId>
     <artifactId>csv2xml</artifactId>
-    <version>0.1-beta-1</version>
+    <version>0.1-beta-2</version>
 </dependency>
 ```
 
