@@ -49,6 +49,10 @@ public class Csv2xml {
 
     private Node currentElement;
 
+    private boolean compact = false;
+
+    private int indentSize = 4;
+
     public Csv2xml() {
         try {
             domFactory = DocumentBuilderFactory.newInstance();
@@ -205,9 +209,9 @@ public class Csv2xml {
 
             TransformerFactory tranFactory = TransformerFactory.newInstance();
             Transformer aTransformer = tranFactory.newTransformer();
-            aTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            aTransformer.setOutputProperty(OutputKeys.INDENT, (isCompact())?"yes":"no");
             aTransformer.setOutputProperty(OutputKeys.METHOD, "xml");
-            aTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            aTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indentSize));
 
             Source src = new DOMSource(document);
             Result result = new StreamResult(osw);
@@ -220,13 +224,19 @@ public class Csv2xml {
         } catch (Exception exp) {
             exp.printStackTrace();
         } finally {
-            try {
-                osw.close();
-            } catch (Exception ignored) {
+            if (osw != null) {
+                try {
+                    osw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            try {
-                baos.close();
-            } catch (Exception ignored) {
+            if (baos != null) {
+                try {
+                    baos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -312,6 +322,21 @@ public class Csv2xml {
         return result;
     }
 
+    public boolean isCompact() {
+        return compact;
+    }
+
+    public void setCompact(boolean compact) {
+        this.compact = compact;
+    }
+
+    public int getIndentSize() {
+        return indentSize;
+    }
+
+    public void setIndentSize(int indentSize) {
+        this.indentSize = (indentSize > 0) ? indentSize : 0;
+    }
 
     /**
      * Create an InputStream form an url or a path of fileSystem
