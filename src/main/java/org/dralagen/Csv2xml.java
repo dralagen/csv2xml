@@ -207,7 +207,7 @@ public class Csv2xml {
             Transformer aTransformer = tranFactory.newTransformer();
             aTransformer.setOutputProperty(OutputKeys.INDENT, "yes");
             aTransformer.setOutputProperty(OutputKeys.METHOD, "xml");
-            aTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "0");
+            aTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
             Source src = new DOMSource(document);
             Result result = new StreamResult(osw);
@@ -231,12 +231,11 @@ public class Csv2xml {
         }
     }
 
-    /*
-
-
-     */
-
     private List<String> split(BufferedReader reader, String delimiter, int limit) throws IOException {
+        return split(reader, delimiter, limit, false);
+    }
+
+    private List<String> split(BufferedReader reader, String delimiter, int limit, boolean fieldOpened) throws IOException {
 
         String text = reader.readLine();
 
@@ -253,26 +252,40 @@ public class Csv2xml {
         while (i < splited.length) {
             int j = i;
 
-            if (!splited[i].equals("") && splited[i].charAt(0) == '"' && splited[i].charAt(splited[i].length()-1) != '"') {
-                // delete the " unnessaisery
-                splited[i] = splited[i].substring(1);
+            // find a complexe field with delimiter charactere or multiline
+            if (!splited[i].equals("") && (splited[i].charAt(0) == '"' | fieldOpened) && splited[i].charAt(splited[i].length()-1) != '"') {
+
+                if (!fieldOpened) {
+                    // delete the " unnessaisery
+                    splited[i] = splited[i].substring(1);
+                }
+
+                fieldOpened = true;
 
                 ++j;
                 if (j < splited.length) {
-                    while ( j < splited.length && splited[j].charAt(splited[j].length() - 1) != '"' ) {
+                    while ( j < splited.length && (splited[j].length() == 0 || splited[j].charAt(splited[j].length() - 1) != '"') ) {
                         splited[i] += ";" + splited[j];
                         ++j;
                     }
-                    splited[i] += ";" + splited[j];
                 }
 
+                // we find the end field
                 if (j < splited.length) {
+                    splited[i] += ";" + splited[j];
                     splited[i] = splited[i].substring(0, splited[i].length() - 2);
+                    fieldOpened = false;
                 }
             }
 
-            if (!splited[i].equals("") && splited[i].charAt(0) == '"' && splited[i].charAt(splited[i].length()-1) == '"') {
-                result.add(splited[i].substring(1, splited[i].length() - 2));
+            // we find a quote field
+            if (!splited[i].equals("") && (splited[i].charAt(0) == '"' | fieldOpened) && splited[i].charAt(splited[i].length()-1) == '"') {
+                int startIndex = 1;
+                if (fieldOpened) {
+                    startIndex = 0;
+                }
+
+                result.add(splited[i].substring(startIndex, splited[i].length() - 2));
             }
             else {
                 result.add(splited[i]);
@@ -284,11 +297,11 @@ public class Csv2xml {
         // complete line who field contain '\n'
         if ( result.size() < limit ) {
             List<String> extendsRowValues = null;
-            if ((extendsRowValues = split(reader, delimiter, limit - result.size())) != null) {
+            if ((extendsRowValues = split(reader, delimiter, limit - result.size(), fieldOpened)) != null) {
 
                 int rowValuesLastIndex = result.size() - 1;
 
-                result.set(rowValuesLastIndex, result.get(rowValuesLastIndex) + "\n" + extendsRowValues.get(0));
+                result.set(rowValuesLastIndex, result.get(rowValuesLastIndex) + " " + extendsRowValues.get(0));
 
                 if ( extendsRowValues.size() > 1 ) {
                     result.addAll(extendsRowValues.subList(1, extendsRowValues.size()));
