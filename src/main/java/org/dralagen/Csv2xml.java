@@ -244,8 +244,8 @@ public class Csv2xml {
             return null;
         }
 
-
-        String[] splited =  text.split(delimiter, limit);
+        // text.split(delimiter) delete end empty field
+        String[] splited =  text.split(delimiter, Integer.MAX_VALUE);
 
         List<String> result = new ArrayList<String>();
 
@@ -254,17 +254,21 @@ public class Csv2xml {
             int j = i;
 
             if (!splited[i].equals("") && splited[i].charAt(0) == '"' && splited[i].charAt(splited[i].length()-1) != '"') {
+                // delete the " unnessaisery
                 splited[i] = splited[i].substring(1);
 
                 ++j;
                 if (j < splited.length) {
-                    while ( splited[j].charAt(splited[j].length() - 1) != '"' && j < splited.length ) {
+                    while ( j < splited.length && splited[j].charAt(splited[j].length() - 1) != '"' ) {
                         splited[i] += ";" + splited[j];
                         ++j;
                     }
-                    splited[i] += ";" + splited[j].substring(0, splited[j].length() - 1);
+                    splited[i] += ";" + splited[j];
                 }
 
+                if (j < splited.length) {
+                    splited[i] = splited[i].substring(0, splited[i].length() - 2);
+                }
             }
 
             if (!splited[i].equals("") && splited[i].charAt(0) == '"' && splited[i].charAt(splited[i].length()-1) == '"') {
