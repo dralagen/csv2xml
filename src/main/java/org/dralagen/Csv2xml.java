@@ -209,7 +209,7 @@ public class Csv2xml {
 
             TransformerFactory tranFactory = TransformerFactory.newInstance();
             Transformer aTransformer = tranFactory.newTransformer();
-            aTransformer.setOutputProperty(OutputKeys.INDENT, (isCompact())?"yes":"no");
+            aTransformer.setOutputProperty(OutputKeys.INDENT, (isCompact())?"no":"yes");
             aTransformer.setOutputProperty(OutputKeys.METHOD, "xml");
             aTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indentSize));
 
@@ -262,43 +262,50 @@ public class Csv2xml {
         while (i < splited.length) {
             int j = i;
 
+            String field = splited[i];
+
             // find a complexe field with delimiter charactere or multiline
-            if (!splited[i].equals("") && (splited[i].charAt(0) == '"' | fieldOpened) && splited[i].charAt(splited[i].length()-1) != '"') {
+            if (!field.equals("")
+                    && (field.charAt(0) == '"' | fieldOpened)
+                    && field.charAt(field.length() - 1) != '"') {
 
                 if (!fieldOpened) {
                     // delete the " unnessaisery
-                    splited[i] = splited[i].substring(1);
+                    field = field.substring(1);
                 }
 
                 fieldOpened = true;
 
                 ++j;
                 if (j < splited.length) {
-                    while ( j < splited.length && (splited[j].length() == 0 || splited[j].charAt(splited[j].length() - 1) != '"') ) {
-                        splited[i] += ";" + splited[j];
+                    String concatField = splited[j];
+                    while ( j < splited.length
+                            && (!concatField.equals("") || concatField.charAt(concatField.length() - 1) != '"')
+                            ) {
+                        field += ";" + concatField;
                         ++j;
                     }
                 }
 
                 // we find the end field
                 if (j < splited.length) {
-                    splited[i] += ";" + splited[j];
-                    splited[i] = splited[i].substring(0, splited[i].length() - 2);
+                    field += ";" + splited[j];
+                    field = field.substring(0, field.length() - 2);
                     fieldOpened = false;
                 }
             }
 
             // we find a quote field
-            if (!splited[i].equals("") && (splited[i].charAt(0) == '"' | fieldOpened) && splited[i].charAt(splited[i].length()-1) == '"') {
-                int startIndex = 1;
-                if (fieldOpened) {
-                    startIndex = 0;
-                }
+            if (!field.equals("")
+                    && (fieldOpened || field.charAt(0) == '"')
+                    && field.charAt(field.length()-1) == '"') {
 
-                result.add(splited[i].substring(startIndex, splited[i].length() - 2));
+                int startIndex = (fieldOpened) ? 0 : 1;
+                result.add(field.substring(startIndex, field.length() - 2));
+                fieldOpened = false;
             }
             else {
-                result.add(splited[i]);
+                result.add(field);
             }
             i = j+1;
         }
