@@ -264,7 +264,7 @@ public class Csv2xml {
 
             String field = splited[i];
 
-            // find a complexe field with delimiter charactere or multiline
+            // find a complex field with delimiter character or multiline
             if (!field.equals("")
                     && (field.charAt(0) == '"' | fieldOpened)
                     && field.charAt(field.length() - 1) != '"') {
@@ -300,7 +300,7 @@ public class Csv2xml {
                     && field.charAt(field.length()-1) == '"') {
 
                 int startIndex = (fieldOpened) ? 0 : 1;
-                result.add(field.substring(startIndex, field.length() - 2));
+                result.add(field.substring(startIndex, field.length() - 1));
                 fieldOpened = false;
             }
             else {
@@ -372,6 +372,15 @@ public class Csv2xml {
     }
 
     public static void main (String[] args) {
+
+        System.out.print("csv2xml Copyright (C) 2014 dralagen\n" +
+                         "This program comes with ABSOLUTELY NO WARRANTY.\n" +
+                         "This is free software, and you are welcome to redistribute it\n" +
+                         "under certain conditions. See the GNU Affero General Public\n" +
+                         "License, either version 3 of the License, or (at your option) any\n" +
+                         "later version for details. Also, see the source code repository:\n" +
+                         "https://github.com/dralagen/csv2xml/\n\n");
+
         if (args.length != 3) {
             System.out.println("Usage : csv2xml \"path/of/input/file.csv\" \"path/of/output/file.xml\" \";\"");
             System.exit(1);
