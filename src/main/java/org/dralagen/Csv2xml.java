@@ -130,8 +130,8 @@ public class Csv2xml {
         int rowsCount = 0;
         try {
             // Read csv file
-            BufferedReader csvReader;
-            csvReader = new BufferedReader(new InputStreamReader(csv));
+            LineNumberReader csvReader;
+            csvReader = new LineNumberReader(new InputStreamReader(csv));
 
             List<String> headers = new ArrayList<String>();
 
@@ -255,11 +255,11 @@ public class Csv2xml {
         }
     }
 
-    private List<String> split(BufferedReader reader, String delimiter, int limit) throws IOException {
+    private List<String> split(LineNumberReader reader, String delimiter, int limit) throws IOException {
         return split(reader, delimiter, limit, false);
     }
 
-    private List<String> split(BufferedReader reader, String delimiter, int limit, boolean fieldOpened) throws IOException {
+    private List<String> split(LineNumberReader reader, String delimiter, int limit, boolean fieldOpened) throws IOException {
 
         String text = reader.readLine();
 
@@ -281,7 +281,8 @@ public class Csv2xml {
             // find a complex field with delimiter character or multiline
             if (!field.equals("")
                     && (field.charAt(0) == '"' | fieldOpened)
-                    && field.charAt(field.length() - 1) != '"') {
+                    && (field.charAt(field.length() - 1) != '"' ||
+                        field.equals("\"") == true)) {
 
                 if (!fieldOpened) {
                     // delete the " unnessaisery
