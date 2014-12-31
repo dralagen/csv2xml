@@ -3,7 +3,7 @@ package org.dralagen;
 /*
  * csv2xml
  *
- * Copyright (C) 2014 dralagen
+ * Copyright (C) 2014 dralagen, Stephan Kreutzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -163,10 +163,24 @@ public class Csv2xml {
                             value = rowValues.get(col);
                         }
 
-                        Element curElement = document.createElement(header);
+                        Element curElement = null;
+
+                        try
+                        {
+                            curElement = document.createElement(header);
+                        }
+                        catch (org.w3c.dom.DOMException e)
+                        {
+                            if (e.code == org.w3c.dom.DOMException.INVALID_CHARACTER_ERR)
+                            {
+                                System.out.println("csv2xml: '" + header + "' isn't a valid XML tag name. Please check the first line of the CSV input file.");
+                            }
+
+                            throw e;
+                        }
+
                         curElement.appendChild(document.createTextNode(value));
                         rowElement.appendChild(curElement);
-
                     }
 
                     rowsCount++;
@@ -373,7 +387,7 @@ public class Csv2xml {
 
     public static void main (String[] args) {
 
-        System.out.print("csv2xml Copyright (C) 2014 dralagen\n" +
+        System.out.print("csv2xml Copyright (C) 2014 dralagen, Stephan Kreutzer\n" +
                          "This program comes with ABSOLUTELY NO WARRANTY.\n" +
                          "This is free software, and you are welcome to redistribute it\n" +
                          "under certain conditions. See the GNU Affero General Public\n" +
