@@ -332,7 +332,7 @@ public class Csv2xml {
 
                 int rowValuesLastIndex = result.size() - 1;
 
-                result.set(rowValuesLastIndex, result.get(rowValuesLastIndex) + " " + extendsRowValues.get(0));
+                result.set(rowValuesLastIndex, result.get(rowValuesLastIndex) + "\n" + extendsRowValues.get(0));
 
                 if ( extendsRowValues.size() > 1 ) {
                     result.addAll(extendsRowValues.subList(1, extendsRowValues.size()));
