@@ -110,6 +110,27 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!--
+                mvn jgitflow:release-start
+                mvn jgitflow:release-finish
+            -->
+            <plugin>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+                <version>1.0-m4.3</version>
+                <configuration>
+                    <flowInitContext>
+                        <masterBranchName>master</masterBranchName>
+                        <developBranchName>develop</developBranchName>
+                        <versionTagPrefix/>
+                    </flowInitContext>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <pushReleases>false</pushReleases>
+                    <allowUntracked>true</allowUntracked>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>
