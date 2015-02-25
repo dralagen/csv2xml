@@ -1,4 +1,4 @@
-csv2xml
+csv2xml [![GitHub version](https://badge.fury.io/gh/dralagen%2Fcsv2xml.svg)](http://badge.fury.io/gh/dralagen%2Fcsv2xml) [![Build Status](https://travis-ci.org/dralagen/csv2xml.svg?branch=develop)](https://travis-ci.org/dralagen/csv2xml)
 =======
 
 It's java converter to parse en csv file to xml file
