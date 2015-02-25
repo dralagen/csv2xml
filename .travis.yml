@@ -1,0 +1,10 @@
+language: java
+jdk:
+    - oraclejdk7
+    - oraclejdk8
+    - openjdk6
+    - openjdk7
+
+matrix:
+  allow_failures:
+    - jdk: openjdk6

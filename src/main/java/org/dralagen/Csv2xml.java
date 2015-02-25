@@ -3,7 +3,7 @@ package org.dralagen;
 /*
  * csv2xml
  *
- * Copyright (C) 2014 dralagen, Stephan Kreutzer
+ * Copyright (C) 2014-2015 dralagen, Stephan Kreutzer
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -130,8 +130,8 @@ public class Csv2xml {
         int rowsCount = 0;
         try {
             // Read csv file
-            BufferedReader csvReader;
-            csvReader = new BufferedReader(new InputStreamReader(csv));
+            LineNumberReader csvReader;
+            csvReader = new LineNumberReader(new InputStreamReader(csv, "UTF-8"));
 
             List<String> headers = new ArrayList<String>();
 
@@ -143,7 +143,6 @@ public class Csv2xml {
                     String[] rowValues = text.split(delimiter);
                     Collections.addAll(headers, rowValues);
                 }
-
             }
 
 
@@ -178,6 +177,8 @@ public class Csv2xml {
 
                             throw e;
                         }
+
+
 
                         curElement.appendChild(document.createTextNode(value));
                         rowElement.appendChild(curElement);
@@ -219,10 +220,11 @@ public class Csv2xml {
         try {
 
             baos = new ByteArrayOutputStream();
-            osw = new OutputStreamWriter(baos);
+            osw = new OutputStreamWriter(baos, "UTF-8");
 
             TransformerFactory tranFactory = TransformerFactory.newInstance();
             Transformer aTransformer = tranFactory.newTransformer();
+            aTransformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             aTransformer.setOutputProperty(OutputKeys.INDENT, (isCompact())?"no":"yes");
             aTransformer.setOutputProperty(OutputKeys.METHOD, "xml");
             aTransformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", String.valueOf(indentSize));
@@ -232,8 +234,8 @@ public class Csv2xml {
             aTransformer.transform(src, result);
 
             osw.flush();
-            String output = new String(baos.toByteArray());
-            out.write(output.getBytes());
+            String output = new String(baos.toByteArray(), "UTF-8");
+            out.write(output.getBytes("UTF-8"));
 
         } catch (Exception exp) {
             exp.printStackTrace();
@@ -255,11 +257,11 @@ public class Csv2xml {
         }
     }
 
-    private List<String> split(BufferedReader reader, String delimiter, int limit) throws IOException {
+    private List<String> split(LineNumberReader reader, String delimiter, int limit) throws IOException {
         return split(reader, delimiter, limit, false);
     }
 
-    private List<String> split(BufferedReader reader, String delimiter, int limit, boolean fieldOpened) throws IOException {
+    private List<String> split(LineNumberReader reader, String delimiter, int limit, boolean fieldOpened) throws IOException {
 
         String text = reader.readLine();
 
@@ -281,7 +283,8 @@ public class Csv2xml {
             // find a complex field with delimiter character or multiline
             if (!field.equals("")
                     && (field.charAt(0) == '"' | fieldOpened)
-                    && field.charAt(field.length() - 1) != '"') {
+                    && (field.charAt(field.length() - 1) != '"' ||
+                        field.equals("\"") == true)) {
 
                 if (!fieldOpened) {
                     // delete the " unnessaisery
@@ -331,7 +334,7 @@ public class Csv2xml {
 
                 int rowValuesLastIndex = result.size() - 1;
 
-                result.set(rowValuesLastIndex, result.get(rowValuesLastIndex) + " " + extendsRowValues.get(0));
+                result.set(rowValuesLastIndex, result.get(rowValuesLastIndex) + "\n" + extendsRowValues.get(0));
 
                 if ( extendsRowValues.size() > 1 ) {
                     result.addAll(extendsRowValues.subList(1, extendsRowValues.size()));
@@ -387,7 +390,7 @@ public class Csv2xml {
 
     public static void main (String[] args) {
 
-        System.out.print("csv2xml Copyright (C) 2014 dralagen, Stephan Kreutzer\n" +
+        System.out.print("csv2xml Copyright (C) 2014-2015 dralagen, Stephan Kreutzer\n" +
                          "This program comes with ABSOLUTELY NO WARRANTY.\n" +
                          "This is free software, and you are welcome to redistribute it\n" +
                          "under certain conditions. See the GNU Affero General Public\n" +
