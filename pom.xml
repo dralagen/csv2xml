@@ -91,7 +91,7 @@
                 <artifactId>site-maven-plugin</artifactId>
                 <version>0.10</version>
                 <configuration>
-                    <message>Add maven artifact : ${project.version}</message>
+                    <message>Add maven artifact : ${project.groupId}.${project.artifactId} ${project.version}</message>
                     <merge>true</merge>
                     <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
                     <branch>refs/heads/master</branch>
