@@ -21,7 +21,7 @@ Use dependency
 
 ```
 <dependency>
-    <groupId>org.dralagen</groupId>
+    <groupId>fr.dralagen</groupId>
     <artifactId>csv2xml</artifactId>
     <version>0.1</version>
 </dependency>
