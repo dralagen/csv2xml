@@ -1,4 +1,4 @@
-package org.dralagen;
+package fr.dralagen;
 
 /*
  * csv2xml
