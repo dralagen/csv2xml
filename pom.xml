@@ -2,7 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.dralagen</groupId>
+    <parent>
+        <groupId>org.dralagen</groupId>
+        <artifactId>pom</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
     <artifactId>csv2xml</artifactId>
     <version>0.2.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -35,9 +40,19 @@
     </scm>
 
     <properties>
-        <!-- github server corresponds to entry in ~/.m2/settings.xml -->
-        <github.global.server>github</github.global.server>
+        <java.mainClass>org.dralagen.Csv2xml</java.mainClass>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>dralagen-maven-repo</id>
+            <url>https://raw.github.com/dralagen/maven-repo/master/</url>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <distributionManagement>
         <repository>
@@ -49,64 +64,10 @@
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>org.dralagen.Csv2xml</mainClass>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.1</version>
-                <configuration>
-                    <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
-                </configuration>
-            </plugin>
 
             <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>site-maven-plugin</artifactId>
-                <version>0.10</version>
-                <configuration>
-                    <message>Add maven artifact : ${project.version}</message>
-                    <merge>true</merge>
-                    <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
-                    <branch>refs/heads/master</branch>
-                    <includes><include>**/*</include></includes>
-                    <repositoryName>maven-repo</repositoryName>
-                    <repositoryOwner>dralagen</repositoryOwner>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
-                        <phase>deploy</phase>
-                    </execution>
-                </executions>
             </plugin>
 
             <!--
@@ -116,16 +77,10 @@
             <plugin>
                 <groupId>external.atlassian.jgitflow</groupId>
                 <artifactId>jgitflow-maven-plugin</artifactId>
-                <version>1.0-m4.3</version>
                 <configuration>
                     <flowInitContext>
-                        <masterBranchName>master</masterBranchName>
-                        <developBranchName>develop</developBranchName>
                         <versionTagPrefix />
                     </flowInitContext>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <pushReleases>false</pushReleases>
-                    <allowUntracked>true</allowUntracked>
                 </configuration>
             </plugin>
 
