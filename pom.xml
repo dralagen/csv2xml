@@ -35,11 +35,6 @@
         <url>https://github.com/dralagen/csv2xml</url>
     </scm>
 
-    <properties>
-        <!-- github server corresponds to entry in ~/.m2/settings.xml -->
-        <github.global.server>github</github.global.server>
-    </properties>
-
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
