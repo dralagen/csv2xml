@@ -54,7 +54,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.dralagen.Csv2xml</mainClass>
+                            <mainClass>fr.dralagen.Csv2xml</mainClass>
                             <addClasspath>true</addClasspath>
                         </manifest>
                     </archive>
