@@ -3,9 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.dralagen</groupId>
+        <groupId>fr.dralagen</groupId>
         <artifactId>pom</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
 
     <artifactId>csv2xml</artifactId>
@@ -40,35 +40,11 @@
     </scm>
 
     <properties>
-        <java.mainClass>org.dralagen.Csv2xml</java.mainClass>
+        <java.mainClass>fr.dralagen.Csv2xml</java.mainClass>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>dralagen-maven-repo</id>
-            <url>https://raw.github.com/dralagen/maven-repo/master/</url>
-            <snapshots>
-                <enabled>false</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>internal.repo</id>
-            <name>Temporary Staging Repository</name>
-            <url>file://${project.build.directory}/mvn-repo</url>
-        </repository>
-    </distributionManagement>
 
     <build>
         <plugins>
-
-            <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-            </plugin>
 
             <!--
                 mvn jgitflow:release-start
