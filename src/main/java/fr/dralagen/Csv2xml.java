@@ -42,7 +42,6 @@ import java.util.*;
  */
 public class Csv2xml {
 
-    private DocumentBuilderFactory domFactory = null;
     private DocumentBuilder        domBuilder = null;
 
     private Document document;
@@ -55,7 +54,7 @@ public class Csv2xml {
 
     public Csv2xml() {
         try {
-            domFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
             domBuilder = domFactory.newDocumentBuilder();
         } catch (FactoryConfigurationError exp) {
             System.err.println(exp.toString());
@@ -80,7 +79,7 @@ public class Csv2xml {
         Element element = document.createElement(node);
         document.appendChild(element);
 
-        currentElement = (Node) element;
+        currentElement = element;
 
     }
 
@@ -107,7 +106,7 @@ public class Csv2xml {
         Element element = document.createElement(node);
         currentElement.appendChild(element);
 
-        currentElement = (Node) element;
+        currentElement = element;
     }
 
     /**
@@ -136,7 +135,7 @@ public class Csv2xml {
             List<String> headers = new ArrayList<String>();
 
             { // Header row
-                String text = null;
+                String text;
 
                 // Header row
                 if ( (text = csvReader.readLine()) != null ) {
@@ -147,7 +146,7 @@ public class Csv2xml {
 
 
             {  // Data rows
-                List<String> rowValues = null;
+                List<String> rowValues;
                 while ( (rowValues = split(csvReader, delimiter, headers.size())) != null ) {
 
                     Element rowElement = document.createElement(nodeRow);
@@ -162,7 +161,7 @@ public class Csv2xml {
                             value = rowValues.get(col);
                         }
 
-                        Element curElement = null;
+                        Element curElement;
 
                         try
                         {
@@ -284,10 +283,10 @@ public class Csv2xml {
             if (!field.equals("")
                     && (field.charAt(0) == '"' | fieldOpened)
                     && (field.charAt(field.length() - 1) != '"' ||
-                        field.equals("\"") == true)) {
+                            field.equals("\""))) {
 
                 if (!fieldOpened) {
-                    // delete the " unnessaisery
+                    // delete the " unnecessary
                     field = field.substring(1);
                 }
 
@@ -329,7 +328,7 @@ public class Csv2xml {
 
         // complete line who field contain '\n'
         if ( result.size() < limit ) {
-            List<String> extendsRowValues = null;
+            List<String> extendsRowValues;
             if ((extendsRowValues = split(reader, delimiter, limit - result.size(), fieldOpened)) != null) {
 
                 int rowValuesLastIndex = result.size() - 1;
@@ -372,7 +371,7 @@ public class Csv2xml {
      * @throws java.io.IOException if a error in read the input
      */
     public static InputStream getInputStream(String inputName) throws IOException {
-        InputStream inputStream = null;
+        InputStream inputStream;
 
         try {
             URL url = new URL(inputName);
