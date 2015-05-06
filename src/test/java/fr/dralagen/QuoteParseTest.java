@@ -31,7 +31,7 @@ import java.io.InputStream;
  *
  * @author dralagen
  */
-public class SimpleMissingParseTest {
+public class QuoteParseTest {
 
   private Csv2xml parser;
 
@@ -44,39 +44,40 @@ public class SimpleMissingParseTest {
     parser.createNewDocument("test");
     parser.setIndentSize(2);
 
-    csvInput = SimpleParseTest.class.getResourceAsStream("/csv/simpleMissing.csv");
+    csvInput = QuoteParseTest.class.getResourceAsStream("/csv/simpleQuote.csv");
   }
 
   @org.junit.Test
-  public void simpleMissingTest() {
+  public void simpleTest() {
     parser.convert(csvInput, ";", "field");
 
     ByteArrayOutputStream result = new ByteArrayOutputStream();
     parser.writeTo(result);
 
-    InputStream expected = SimpleParseTest.class.getResourceAsStream("/xml/simpleMissing.xml");
+    InputStream expected = QuoteParseTest.class.getResourceAsStream("/xml/simple.xml");
 
     try {
-      Assert.assertEquals("Simple csv parsing with missing field", IOUtils.toString(expected), IOUtils.toString(result.toByteArray(), "UTF-8"));
+      Assert.assertEquals("Simple csv parsing with quoting field", IOUtils.toString(expected), IOUtils.toString(result.toByteArray(), "UTF-8"));
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   @org.junit.Test
-  public void simpleMissingCompactTest() {
+  public void simpleCompactTest() {
     parser.setCompact(true);
     parser.convert(csvInput, ";", "field");
 
     ByteArrayOutputStream result = new ByteArrayOutputStream();
     parser.writeTo(result);
 
-    InputStream expected = SimpleParseTest.class.getResourceAsStream("/xml/simpleMissingCompact.xml");
+    InputStream expected = QuoteParseTest.class.getResourceAsStream("/xml/simpleCompact.xml");
 
     try {
-      Assert.assertEquals("Simple csv parsing on compact mode with missing field", IOUtils.toString(expected), IOUtils.toString(result.toByteArray(), "UTF-8"));
+      Assert.assertEquals("Simple csv parsing on compact mode with quoting field", IOUtils.toString(expected), IOUtils.toString(result.toByteArray(), "UTF-8"));
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
+
 }
