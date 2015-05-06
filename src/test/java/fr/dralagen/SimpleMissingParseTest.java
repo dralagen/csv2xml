@@ -22,14 +22,16 @@ package fr.dralagen;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created on 5/6/15.
  *
  * @author dralagen
  */
-public class SimpleParseTest {
+public class SimpleMissingParseTest {
 
   private Csv2xml parser;
 
@@ -42,40 +44,39 @@ public class SimpleParseTest {
     parser.createNewDocument("test");
     parser.setIndentSize(2);
 
-    csvInput = SimpleParseTest.class.getResourceAsStream("/csv/simple.csv");
+    csvInput = SimpleParseTest.class.getResourceAsStream("/csv/simpleMissing.csv");
   }
 
   @org.junit.Test
-  public void simpleTest() {
+  public void simpleMissingTest() {
     parser.convert(csvInput, ";", "field");
 
     ByteArrayOutputStream result = new ByteArrayOutputStream();
     parser.writeTo(result);
 
-    InputStream expected = SimpleParseTest.class.getResourceAsStream("/xml/simple.xml");
+    InputStream expected = SimpleParseTest.class.getResourceAsStream("/xml/simpleMissing.xml");
 
     try {
-      Assert.assertEquals("Simple csv parsing", IOUtils.toString(expected), IOUtils.toString(result.toByteArray(), "UTF-8"));
+      Assert.assertEquals("Simple csv parsing with missing field", IOUtils.toString(expected), IOUtils.toString(result.toByteArray(), "UTF-8"));
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   @org.junit.Test
-  public void simpleCompactTest() {
+  public void simpleMissingCompactTest() {
     parser.setCompact(true);
     parser.convert(csvInput, ";", "field");
 
     ByteArrayOutputStream result = new ByteArrayOutputStream();
     parser.writeTo(result);
 
-    InputStream expected = SimpleParseTest.class.getResourceAsStream("/xml/simpleCompact.xml");
+    InputStream expected = SimpleParseTest.class.getResourceAsStream("/xml/simpleMissingCompact.xml");
 
     try {
-      Assert.assertEquals("Simple csv parsing on compact mode", IOUtils.toString(expected), IOUtils.toString(result.toByteArray(), "UTF-8"));
+      Assert.assertEquals("Simple csv parsing with missing field", IOUtils.toString(expected), IOUtils.toString(result.toByteArray(), "UTF-8"));
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
-
 }

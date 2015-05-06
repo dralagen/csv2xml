@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<test>
+  <field>
+    <name/>
+    <description>It's my first element</description>
+    <date>22/10/2014</date>
+  </field>
+  <field>
+    <name>element 2</name>
+    <description/>
+    <date>24/10/2014</date>
+  </field>
+  <field>
+    <name>third element</name>
+    <description>It's my third element</description>
+    <date/>
+  </field>
+  <field>
+    <name>el4</name>
+    <description/>
+    <date/>
+  </field>
+  <field>
+    <name/>
+    <description>five element</description>
+    <date/>
+  </field>
+  <field>
+    <name/>
+    <description/>
+    <date>26/10/2014</date>
+  </field>
+  <field>
+    <name/>
+    <description/>
+    <date/>
+  </field>
+</test>
