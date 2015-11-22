@@ -282,8 +282,7 @@ public class Csv2xml {
             // find a complex field with delimiter character or multiline
             if (!field.equals("")
                     && (field.charAt(0) == '"' || fieldOpened)
-                    && (field.charAt(field.length() - 1) != '"' ||
-                            field.equals("\""))) {
+                    && (field.charAt(field.length() - 1) != '"')) {
 
                 if (!fieldOpened) {
                     // delete the " unnecessary

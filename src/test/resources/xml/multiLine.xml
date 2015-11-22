@@ -15,7 +15,8 @@ element</description>
   </field>
   <field>
     <name>third
-element</name>
+element
+</name>
     <description>It's my third element
 
 with empty line</description>
