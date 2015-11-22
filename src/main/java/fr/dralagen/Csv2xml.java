@@ -282,7 +282,7 @@ public class Csv2xml {
 
             // find a complex field with delimiter character or multiline
             if (!field.equals("")
-                    && (field.charAt(0) == '"' | fieldOpened)
+                    && (field.charAt(0) == '"' || fieldOpened)
                     && (field.charAt(field.length() - 1) != '"' ||
                         field.equals("\"") == true)) {
 
@@ -298,14 +298,14 @@ public class Csv2xml {
                     while ( j < splited.length
                             && (splited[j].equals("") || splited[j].charAt(splited[j].length() - 1) != '"')
                             ) {
-                        field += ";" + splited[j];
+                        field += delimiter + splited[j];
                         ++j;
                     }
                 }
 
                 // we find the end field
                 if (j < splited.length) {
-                    field += ";" + splited[j];
+                    field += delimiter + splited[j];
                     field = field.substring(0, field.length() - 2);
                     fieldOpened = false;
                 }
