@@ -2,24 +2,17 @@
 <test>
   <field>
     <name>element 1</name>
-    <description>It's my first element
-on two line</description>
+    <description>It's my "first" element</description>
     <date>22/10/2014</date>
   </field>
   <field>
     <name>element 2</name>
-    <description>It's
-my second
-element</description>
+    <description>It's my second "element"</description>
     <date>24/10/2014</date>
   </field>
   <field>
-    <name>
-third element
-</name>
-    <description>It's my third element
-
-with empty line</description>
+    <name>"third" element</name>
+    <description>It's my third element</description>
     <date>25/10/2014</date>
   </field>
 </test>

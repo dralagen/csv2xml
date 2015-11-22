@@ -144,7 +144,6 @@ public class Csv2xml {
                 }
             }
 
-
             {  // Data rows
                 List<String> rowValues;
                 while ( (rowValues = split(csvReader, delimiter, headers.size())) != null ) {
@@ -177,9 +176,7 @@ public class Csv2xml {
                             throw e;
                         }
 
-
-
-                        curElement.appendChild(document.createTextNode(value));
+                        curElement.appendChild(document.createTextNode(value.replaceAll("\"\"", "\"")));
                         rowElement.appendChild(curElement);
                     }
 
@@ -284,28 +281,29 @@ public class Csv2xml {
                     && (field.charAt(0) == '"' || fieldOpened)
                     && (field.charAt(field.length() - 1) != '"')) {
 
-                if (!fieldOpened) {
+                if (!fieldOpened && field.length() > 1 && field.charAt(1) != '"') {
                     // delete the " unnecessary
                     field = field.substring(1);
+                    fieldOpened = true;
                 }
 
-                fieldOpened = true;
-
-                ++j;
-                if (j < splited.length) {
-                    while ( j < splited.length
-                            && (splited[j].equals("") || splited[j].charAt(splited[j].length() - 1) != '"')
-                            ) {
-                        field += delimiter + splited[j];
-                        ++j;
+                if (fieldOpened) {
+                    ++j;
+                    if (j < splited.length) {
+                        while (j < splited.length
+                                && (splited[j].equals("") || splited[j].charAt(splited[j].length() - 1) != '"')
+                                ) {
+                            field += delimiter + splited[j];
+                            ++j;
+                        }
                     }
-                }
 
-                // we find the end field
-                if (j < splited.length) {
-                    field += delimiter + splited[j];
-                    field = field.substring(0, field.length() - 2);
-                    fieldOpened = false;
+                    // we find the end field
+                    if (j < splited.length) {
+                        field += delimiter + splited[j];
+                        field = field.substring(0, field.length() - 2);
+                        fieldOpened = false;
+                    }
                 }
             }
 
@@ -315,7 +313,7 @@ public class Csv2xml {
                     && field.charAt(field.length()-1) == '"') {
 
                 int startIndex = (fieldOpened) ? 0 : 1;
-                result.add(field.substring(startIndex, field.length() - 1));
+                result.add(field.substring(startIndex, Math.max(field.length() - 1, 1)));
                 fieldOpened = false;
             }
             else {
@@ -323,7 +321,6 @@ public class Csv2xml {
             }
             i = j+1;
         }
-
 
         // complete line who field contain '\n'
         if ( result.size() < limit ) {
@@ -426,8 +423,6 @@ public class Csv2xml {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-
 
     }
 }
