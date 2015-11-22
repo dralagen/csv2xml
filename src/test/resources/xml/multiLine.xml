@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<test>
+  <field>
+    <name>element 1</name>
+    <description>It's my first element
+on two line</description>
+    <date>22/10/2014</date>
+  </field>
+  <field>
+    <name>element 2</name>
+    <description>It's
+my second
+element</description>
+    <date>24/10/2014</date>
+  </field>
+  <field>
+    <name>third
+element</name>
+    <description>It's my third element
+
+with empty line</description>
+    <date>25/10/2014</date>
+  </field>
+</test>

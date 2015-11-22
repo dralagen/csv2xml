@@ -42,7 +42,7 @@ import java.util.*;
  */
 public class Csv2xml {
 
-    private DocumentBuilder        domBuilder = null;
+    private DocumentBuilder domBuilder = null;
 
     private Document document;
 
@@ -329,7 +329,7 @@ public class Csv2xml {
         // complete line who field contain '\n'
         if ( result.size() < limit ) {
             List<String> extendsRowValues;
-            if ((extendsRowValues = split(reader, delimiter, limit - result.size(), fieldOpened)) != null) {
+            if ((extendsRowValues = split(reader, delimiter, limit - result.size()+1, fieldOpened)) != null) {
 
                 int rowValuesLastIndex = result.size() - 1;
 

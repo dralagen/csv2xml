@@ -50,6 +50,7 @@
 
     <properties>
         <java.mainClass>fr.dralagen.Csv2xml</java.mainClass>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -173,9 +174,5 @@
 
         </plugins>
     </build>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 </project>
 
