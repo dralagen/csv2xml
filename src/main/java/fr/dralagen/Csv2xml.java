@@ -42,8 +42,7 @@ import java.util.*;
  */
 public class Csv2xml {
 
-    private DocumentBuilderFactory domFactory = null;
-    private DocumentBuilder        domBuilder = null;
+    private DocumentBuilder domBuilder = null;
 
     private Document document;
 
@@ -55,7 +54,7 @@ public class Csv2xml {
 
     public Csv2xml() {
         try {
-            domFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
             domBuilder = domFactory.newDocumentBuilder();
         } catch (FactoryConfigurationError exp) {
             System.err.println(exp.toString());
@@ -80,7 +79,7 @@ public class Csv2xml {
         Element element = document.createElement(node);
         document.appendChild(element);
 
-        currentElement = (Node) element;
+        currentElement = element;
 
     }
 
@@ -107,7 +106,7 @@ public class Csv2xml {
         Element element = document.createElement(node);
         currentElement.appendChild(element);
 
-        currentElement = (Node) element;
+        currentElement = element;
     }
 
     /**
@@ -136,7 +135,7 @@ public class Csv2xml {
             List<String> headers = new ArrayList<String>();
 
             { // Header row
-                String text = null;
+                String text;
 
                 // Header row
                 if ( (text = csvReader.readLine()) != null ) {
@@ -145,9 +144,8 @@ public class Csv2xml {
                 }
             }
 
-
             {  // Data rows
-                List<String> rowValues = null;
+                List<String> rowValues;
                 while ( (rowValues = split(csvReader, delimiter, headers.size())) != null ) {
 
                     Element rowElement = document.createElement(nodeRow);
@@ -162,7 +160,7 @@ public class Csv2xml {
                             value = rowValues.get(col);
                         }
 
-                        Element curElement = null;
+                        Element curElement;
 
                         try
                         {
@@ -178,9 +176,7 @@ public class Csv2xml {
                             throw e;
                         }
 
-
-
-                        curElement.appendChild(document.createTextNode(value));
+                        curElement.appendChild(document.createTextNode(value.replaceAll("\"\"", "\"")));
                         rowElement.appendChild(curElement);
                     }
 
@@ -283,31 +279,31 @@ public class Csv2xml {
             // find a complex field with delimiter character or multiline
             if (!field.equals("")
                     && (field.charAt(0) == '"' || fieldOpened)
-                    && (field.charAt(field.length() - 1) != '"' ||
-                        field.equals("\"") == true)) {
+                    && (field.charAt(field.length() - 1) != '"')) {
 
-                if (!fieldOpened) {
-                    // delete the " unnessaisery
+                if (!fieldOpened && field.length() > 1 && field.charAt(1) != '"') {
+                    // delete the " unnecessary
                     field = field.substring(1);
+                    fieldOpened = true;
                 }
 
-                fieldOpened = true;
-
-                ++j;
-                if (j < splited.length) {
-                    while ( j < splited.length
-                            && (splited[j].equals("") || splited[j].charAt(splited[j].length() - 1) != '"')
-                            ) {
-                        field += delimiter + splited[j];
-                        ++j;
+                if (fieldOpened) {
+                    ++j;
+                    if (j < splited.length) {
+                        while (j < splited.length
+                                && (splited[j].equals("") || splited[j].charAt(splited[j].length() - 1) != '"')
+                                ) {
+                            field += delimiter + splited[j];
+                            ++j;
+                        }
                     }
-                }
 
-                // we find the end field
-                if (j < splited.length) {
-                    field += delimiter + splited[j];
-                    field = field.substring(0, field.length() - 2);
-                    fieldOpened = false;
+                    // we find the end field
+                    if (j < splited.length) {
+                        field += delimiter + splited[j];
+                        field = field.substring(0, field.length() - 2);
+                        fieldOpened = false;
+                    }
                 }
             }
 
@@ -317,7 +313,7 @@ public class Csv2xml {
                     && field.charAt(field.length()-1) == '"') {
 
                 int startIndex = (fieldOpened) ? 0 : 1;
-                result.add(field.substring(startIndex, field.length() - 1));
+                result.add(field.substring(startIndex, Math.max(field.length() - 1, 1)));
                 fieldOpened = false;
             }
             else {
@@ -326,11 +322,10 @@ public class Csv2xml {
             i = j+1;
         }
 
-
         // complete line who field contain '\n'
         if ( result.size() < limit ) {
-            List<String> extendsRowValues = null;
-            if ((extendsRowValues = split(reader, delimiter, limit - result.size(), fieldOpened)) != null) {
+            List<String> extendsRowValues;
+            if ((extendsRowValues = split(reader, delimiter, limit - result.size()+1, fieldOpened)) != null) {
 
                 int rowValuesLastIndex = result.size() - 1;
 
@@ -372,7 +367,7 @@ public class Csv2xml {
      * @throws java.io.IOException if a error in read the input
      */
     public static InputStream getInputStream(String inputName) throws IOException {
-        InputStream inputStream = null;
+        InputStream inputStream;
 
         try {
             URL url = new URL(inputName);
@@ -428,8 +423,6 @@ public class Csv2xml {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-
 
     }
 }
